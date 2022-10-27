@@ -17246,6 +17246,10 @@ td.rdtYear:hover {
   color: #9945FF !important;
 }
 
+.css-6xx9ca a{
+  font-size: 22px;
+}
+
 .custom-input {
   background: rgba(0, 0, 0, 0.5);
   border-radius: 15px;
@@ -17318,7 +17322,7 @@ td.rdtYear:hover {
     left: 0px;
     background: #1e2c37;
     opacity: 0.9;
-    border-right: 5px solid #ffbb00;
+    border-right: 5px solid #9945FF;
     display: flex;
     flex-direction: column;
     /* justify-content: space-between; */

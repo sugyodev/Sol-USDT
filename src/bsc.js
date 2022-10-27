@@ -144,10 +144,6 @@ function WealthMountain() {
     return (<>{totalEarnedPercent}</>)
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //    RENDER
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   return (
     <>
       {mobile === true ? (
@@ -229,7 +225,7 @@ function WealthMountain() {
       )
         : null}
       <div className="custom-header">
-            <h1 style={{fontWeight:800}}>SOL-USDT</h1>
+        <h1 style={{ fontWeight: 800 }}>SOL-USDT</h1>
         <div className="header_menu">
           <Item>
 
