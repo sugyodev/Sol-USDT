@@ -6,22 +6,14 @@ import 'aos/dist/aos.css';
 import './App.css';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-import { useContract } from 'wagmi'
-import wealthMountainABI from './contracts/WealthMountainBSC.json';
 import styled from "styled-components";
 import SelectObject from "./components/SelectCoin";
 import { FaCopy, FaWallet, FaUserShield, FaSearchDollar } from 'react-icons/fa';
 import { GiHamburgerMenu } from "react-icons/gi"
-import Web3 from "web3";
 import banner_demountain from "./assets/demountain.mp4";
-import abiDecoder from "abi-decoder";
 import {
   Button,
   Card,
-  ButtonDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   CardDeck,
   Container,
   Col,
@@ -30,10 +22,9 @@ import {
   Input,
   InputGroup,
   Label,
-  Table,
   Row
 } from "reactstrap";
-import { ethers, Contract } from 'ethers';
+import { ethers } from 'ethers';
 
 AOS.init({ duration: 2000 });
 
@@ -52,87 +43,18 @@ const Item = styled('div')(({ theme }) => ({
   fontFamily: 'Roboto',
 }));
 
-let contractAbi = [
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "amtx",
-        type: "uint256"
-      },
-      {
-        internalType: "address",
-        name: "ref",
-        type: "address"
-      }
-    ],
-    name: "stakeStablecoins",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "withdrawDivs",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "withdrawAmount",
-        type: "uint256"
-      }
-    ],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-];
-
-console.log(abiDecoder, contractAbi);
-
-// abiDecoder.addABI(contractAbi);
-const abiCoder = require("web3-eth-abi");
-console.log(abiCoder);
-
-const inputs = [
-  {
-    "internalType": "uint256",
-    "name": "amtx",
-    "type": "uint256"
-  },
-  {
-    "internalType": "address",
-    "name": "ref",
-    "type": "address"
-  }
-];
-
-
 function WealthMountain() {
   const [sliderValue, setSliderValue] = useState('50');
-  const [dropdownOpen, setOpen] = React.useState(false);
   const [userInfo, setUserInfo] = useState([]);
   const [calcTotalDividends, setCalcTotalDividends] = useState("")
   const [initalStakeAfterFees, setInitalStakeAfterFees] = useState("")
   const [dailyPercent, setDailyPercent] = useState("");
   const [dailyValue, setDailyValue] = useState("");
-  const [stakingAmount, setStakingAmount] = useState("");
   const [calculatedDividends, setCalculatedDividends] = useState(0);
-  const [contractBalance, setContractBalance] = useState("");
   const [referralAccrued, setReferralAccrued] = useState("");
-  const [totalUsers, setTotalUsers] = useState("");
-  const [dayValue10, setDayValue10] = useState("864000");
-  const [dayValue20, setDayValue20] = useState("1728000");
-  const [dayValue30, setDayValue30] = useState("2592000");
-  const [dayValue40, setDayValue40] = useState("3456000");
-  const [dayValue50, setDayValue50] = useState("4320000");
-  const [contract, setContract] = useState(undefined)
-  const [signer, setSigner] = useState(undefined)
   const [userWalletAddress, setUserWalletAddress] = useState('none');
   const [userStablecoinBalance, setUserStablecoinBalance] = useState(0);
   const [stablecoinAllowanceAmount, setStablecoinAllowanceAmount] = useState(0);
-  const stableCoin = '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56';
-  const wealthContract = '0xbcae54cdf6a1b1c60ec3d44114b452179a96c1e3'
-  const [refBonusLoading, setRefBonusLoading] = useState(false);
-  const [connectButtonText, setConnectButtonText] = useState('CONNECT')
   const videoRef = useRef();
 
   const [mobile, setMobile] = useState(false);
@@ -141,11 +63,10 @@ function WealthMountain() {
   const [cnt, setCnt] = useState(0);
 
   const audits = [
-    { link: 'https://georgestamp.xyz/2022/09/wc-miner-busd/', label: 'Audit 1' },
-    { link: '/audit.pdf', label: 'Audit 2' },
+    { link: 'https://georgestamp.xyz/2022/09/wc-miner-busd/', label: 'AUDIT One' },
+    { link: '/audit.pdf', label: 'AUDIT Two' },
   ];
   const onChangeAuditNo = (value) => {
-    console.log("onChangeAuditNo value=", value); //, " : ", audits[value].link);
     setCnt((cnt + 1) % 2);
     setAuditNo(audits[(cnt + 1) % 2].link);
   }
@@ -153,17 +74,6 @@ function WealthMountain() {
 
   useEffect(() => {
     const init = async () => {
-      var provider = new ethers.providers.Web3Provider(window.ethereum)
-      var signer = provider.getSigner()
-      setSigner(signer)
-      var contract = new Contract(
-        wealthContract,
-        wealthMountainABI,
-        signer
-      )
-      setContract(contract)
-      setUserWalletAddress(provider.provider.selectedAddress);
-      getAllBuyAndSellReceipts(wealthContract, userWalletAddress);
       videoRef.current.play().catch(error => {
         console.log("Play error = ", error);
       });
@@ -171,123 +81,8 @@ function WealthMountain() {
     init();
   }, []);
 
-  window.addEventListener("focus", function () {
-    recalculateInfo();
-  })
-
-  const getAllBuyAndSellReceipts = async (address, userAddress) => {
-    const totalBuyAndSell = { totalBuy: 0.0, totalSell: 0.0 };
-    const returnedData = await fetch(
-      `https://api.bscscan.com/api?module=account&action=txlist&address=${address}&startblock=21869046&endblock=99999999&apikey=YGKJFMK5FW1H9T9GR9VTGIT2UC5PXUTDTB`
-    );
-    const parsedData = await returnedData.json();
-    if (parsedData.status === "1") {
-      const transactions = parsedData.result;
-      let count = 0;
-      let accounts = [];
-      let investInfo = [
-        {
-          from: '',
-          amountBought: 0,
-          investTime: 0,
-          hash: 0,
-          award: '$1500',
-        },
-        {
-          from: '',
-          amountBought: 0,
-          investTime: 0,
-          hash: 0,
-          award: '$1000',
-        },
-        {
-          from: '',
-          amountBought: 0,
-          investTime: 0,
-          hash: 0,
-          award: '$500',
-        },
-        {
-          from: '',
-          amountBought: 0,
-          investTime: 0,
-          hash: 0,
-          award: '',
-        },
-        {
-          from: '',
-          amountBought: 0,
-          investTime: 0,
-          hash: 0,
-          award: '',
-        }
-      ];
-      console.log('transactions => ', transactions, investInfo.length, investInfo[0].amountBought);
-      for (const tx of transactions) {
-        if (accounts.indexOf(tx.from) == -1) {
-          accounts.push(tx.from);
-          count++
-        }
-      }
-      setTotalUsers(count);
-      console.log("count = ", count);
-    }
-    return totalBuyAndSell;
-  };
-
-  async function recalcAllowance() {
-    if (contract === undefined || contract === null) {
-      return;
-    }
-    const userAllowance = await stablecoinAllowance.allowance(userWalletAddress, contract.address);
-    setStablecoinAllowanceAmount(Number(ethers.utils.formatEther(userAllowance)));
-  }
-
-  async function recalculateInfo() {
-    if (contract === undefined || contract === null) {
-      return;
-    }
-
-    contract.userInfo().then(value => {
-      setUserInfo(value)
-    })
-    contract.calcdiv(userWalletAddress).then(value => {
-      setCalculatedDividends(Number(ethers.utils.formatEther(value)));
-    })
-    const balance = await stablecoinBalance.balanceOf(contract.address);
-    setContractBalance(Number(ethers.utils.formatEther(balance)));
-
-    const userBalance = await stablecoinBalance.balanceOf(userWalletAddress);
-    setUserStablecoinBalance(Number(ethers.utils.formatEther(userBalance)))
-
-    const userAllowance = await stablecoinAllowance.allowance(userWalletAddress, contract.address);
-    setStablecoinAllowanceAmount(Number(ethers.utils.formatEther(userAllowance)))
-
-    contract.UsersKey(String(userWalletAddress)).then(value => {
-      setReferralAccrued(Number(ethers.utils.formatEther(value.refBonus)).toFixed(2));
-    })
-    contract.PercsKey(10).then(value => {
-      setDayValue10(Number(value.daysInSeconds))
-    })
-    contract.PercsKey(20).then(value => {
-      setDayValue20(Number(value.daysInSeconds))
-    })
-    contract.PercsKey(30).then(value => {
-      setDayValue30(Number(value.daysInSeconds))
-    })
-    contract.PercsKey(40).then(value => {
-      setDayValue40(Number(value.daysInSeconds))
-    })
-    contract.PercsKey(50).then(value => {
-      setDayValue50(Number(value.daysInSeconds))
-    })
-
-  }
   const updateCalc = event => {
     setInitalStakeAfterFees(Number(event.target.value * 0.9).toFixed(2));
-  }
-  const updateStakingAmount = event => {
-    setStakingAmount(event.target.value);
   }
 
   function calculate(v) {
@@ -323,77 +118,6 @@ function WealthMountain() {
       setDailyValue(Number(initalStakeAfterFees * .085).toFixed(2))
     }
   }
-
-  async function approveButton() {
-    const tx = stablecoinContract.approve(contract.address, String(ethers.utils.parseEther(stakingAmount)));
-    tx.wait().then(() => {
-      recalcAllowance();
-    })
-  }
-  async function stakeAmount() {
-    if (Number(stakingAmount) < Number(50)) {
-      alert('Minimum stake amount not met.')
-    }
-
-    const ref = window.location.search;
-    const referralAddress = String(ref.replace('?ref=', ''))
-    console.log("referralAddress: ", referralAddress);
-    if (referralAddress === 'null' || referralAddress.includes("0x") === false) {
-      const tx = await contract.stakeStablecoins(
-        String(ethers.utils.parseEther(stakingAmount)), String("0x0000000000000000000000000000000000000000"));
-      tx.wait();
-    } else {
-      const tx = await contract.stakeStablecoins(
-        String(ethers.utils.parseEther(stakingAmount)), String(referralAddress));
-      tx.wait();
-    }
-  }
-  async function stakeRefBonus() {
-    const tx = await contract.stakeRefBonus();
-    tx.wait().then(() => {
-      recalculateInfo();
-    })
-  }
-  async function withdrawRefBonus() {
-    const tx = await contract.withdrawRefBonus();
-    tx.wait().then(() => {
-      recalculateInfo();
-    })
-  }
-  async function compound() {
-    const tx = await contract.compound()
-    tx.wait().then(() => {
-      recalculateInfo();
-    })
-  }
-  async function withdrawDivs() {
-    const tx = await contract.withdrawDivs()
-    tx.wait().then(() => {
-      recalculateInfo();
-    })
-  }
-  const stablecoinContract = useContract({
-    addressOrName: stableCoin,
-    contractInterface: ['function approve(address spender, uint amount) public returns(bool)'],
-    signerOrProvider: signer,
-  })
-  const stablecoinBalance = useContract({
-    addressOrName: stableCoin,
-    contractInterface: ['function balanceOf(address account) external view returns (uint256)'],
-    signerOrProvider: signer,
-  })
-  const stablecoinAllowance = useContract({
-    addressOrName: stableCoin,
-    contractInterface: ['function allowance(address _owner, address spender) external view returns (uint256)'],
-    signerOrProvider: signer,
-  })
-
-  async function withdrawInitial(value) {
-    const tx = await contract.withdrawInitial(value);
-    tx.wait().then(() => {
-      recalculateInfo();
-    })
-  }
   function TotalStakedValue() {
     var total = 0;
     for (var i = 0; i < userInfo.length; i++) {
@@ -420,143 +144,6 @@ function WealthMountain() {
     return (<>{totalEarnedPercent}</>)
   }
 
-  function ListOfUserStakes() {
-    if (userInfo.length === 0) {
-      return (
-        <>
-          <small className="font-weight-bold source text-lightblue">Nothing to show here.</small>
-        </>
-      )
-    }
-    const listElements = userInfo.map(
-      (element) => {
-        const depoStart = Number(element.depoTime)
-        const depoAmount = Number(ethers.utils.formatEther(element.amt))
-        const initialWithdrawn = element.initialWithdrawn;
-        var dailyPercent = '';
-        var unstakeFee = '';
-        const elapsedTime = (Date.now() / 1000 - (depoStart));
-        var totalEarned = '0';
-        var daysToMax = Number((dayValue50 - elapsedTime) / 86400).toFixed(1)
-        if (elapsedTime <= dayValue10) {
-          dailyPercent = '3.5'
-          unstakeFee = '20%'
-          totalEarned = (depoAmount * (dailyPercent / 100)) * (elapsedTime / dayValue10 / 10)
-
-        } else if (elapsedTime > dayValue10 && elapsedTime <= dayValue20) {
-          dailyPercent = '3.5'
-          unstakeFee = '18%'
-          totalEarned = (depoAmount * (dailyPercent / 100)) * (elapsedTime / dayValue10 / 10)
-
-        } else if (elapsedTime > dayValue20 && elapsedTime <= dayValue30) {
-          dailyPercent = '4.5'
-          unstakeFee = '15%'
-          totalEarned = (depoAmount * (dailyPercent / 100)) * (elapsedTime / dayValue10 / 10)
-
-        } else if (elapsedTime > dayValue30 && elapsedTime <= dayValue40) {
-          dailyPercent = '5.5'
-          unstakeFee = '12%'
-          totalEarned = (depoAmount * (dailyPercent / 100)) * (elapsedTime / dayValue10 / 10)
-
-        } else if (elapsedTime > dayValue40 && elapsedTime <= dayValue50) {
-          dailyPercent = '6.5'
-          unstakeFee = '12%'
-          totalEarned = (depoAmount * (dailyPercent / 100)) * (elapsedTime / dayValue10 / 10)
-
-        } else if (elapsedTime > dayValue50) {
-          dailyPercent = '8.5'
-          unstakeFee = '12%'
-          totalEarned = depoAmount * (dailyPercent / 100) * (elapsedTime / dayValue10 / 10)
-          daysToMax = 'Max'
-        }
-        var daysStaked = Number(elapsedTime / 86400).toFixed(2);
-        if (daysStaked < 1) {
-          daysStaked = "<1"
-        }
-
-        if (initialWithdrawn == false) {
-          return (
-            <>
-              <tr>
-                <td>${depoAmount.toFixed(2)}</td>
-                <td>{daysStaked}</td>
-                <td>{dailyPercent}%</td>
-                <td>{daysToMax}</td>
-                <td style={{ fontStyle: 'italic' }}>{unstakeFee}</td>
-              </tr>
-            </>
-          )
-        }
-      }
-    )
-    return (
-      <>
-        <Table striped>
-          <thead>
-            <tr className="text-lightblue calvino">
-              <th>Amount</th>
-              <th>Days staked</th>
-              <th>Daily (%)</th>
-              <th>Days to Max</th>
-              <th>Unstake fee</th>
-            </tr>
-          </thead>
-          <tbody className="source text-white">
-            {listElements}
-          </tbody>
-        </Table>
-      </>
-    )
-  }
-
-  function UnstakeOptions() {
-    if (userInfo.length == 0) {
-      return (
-        <>
-          <Button outline className="custom-button mt-3 source">Start a stake to see your info</Button>
-        </>
-      )
-    }
-    const listElements = userInfo.map(
-      (element) => {
-        const depoStart = new Date(Number(element.depoTime) * 1000).toDateString()
-        const depoAmount = Number(ethers.utils.formatEther(element.amt)).toFixed(2)
-        const initialWithdrawn = element.initialWithdrawn;
-        const key = Number(element.key);
-        if (initialWithdrawn == false) {
-          return (
-            <>
-              <DropdownItem onClick={() => {
-                withdrawInitial(key)
-              }}>
-                <Col className="text-center">
-                  <Row>${depoAmount}</Row>
-                  <Row><small className="text-muted">{depoStart}</small></Row>
-                </Col>
-              </DropdownItem>
-              <div></div>
-            </>
-          )
-        }
-      }
-    )
-    return (
-      <>
-        <ButtonDropdown className="custom-button source mt-4" toggle={() => { setOpen(!dropdownOpen) }}
-          isOpen={dropdownOpen}>
-          <DropdownToggle outline caret className="font-weight-bold source">
-            Unstake
-          </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem header style={{ color: 'black' }}>Your current stakes
-            </DropdownItem>
-            {listElements}
-          </DropdownMenu>
-        </ButtonDropdown>
-      </>
-    )
-  }
-
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //    RENDER
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -567,7 +154,7 @@ function WealthMountain() {
         <div className="mobile_head">
           <div className="mobile_herader_content">
             <div style={{ alignSelf: "center", marginBottom: "30px" }}>
-              <img src="./favicon.png" alt="ETH Snowball" height="64px" />
+              SOL-USDT
             </div>
             <div className="mobile_four_btn">
               <div onClick={() => {
@@ -627,9 +214,8 @@ function WealthMountain() {
             >
               <Button
                 className='custom-button'
-                style={{ maxHeight: "43px", backgroundColor: '#000000b8', color: '#ffbb00' }}
               >
-                {connectButtonText}
+                CONNECT
               </Button>
             </div>
           </div>
@@ -643,22 +229,18 @@ function WealthMountain() {
       )
         : null}
       <div className="custom-header">
-        <img
-          alt="..."
-          src="./favicon.png"
-          style={{ width: 'auto', height: '96px' }}
-        />
+            <h1 style={{fontWeight:800}}>SOL-USDT</h1>
         <div className="header_menu">
           <Item>
 
-            <SelectObject value={auditNo} onChangeAuditNo={onChangeAuditNo} color='#ffbb00' />
+            <SelectObject value={auditNo} onChangeAuditNo={onChangeAuditNo} color='#9945FF' />
           </Item>
           <Item>
             <a href="https://bscscan.com/address/0xbcae54cdf6a1b1c60ec3d44114b452179a96c1e3" target="_blank" rel="noreferrer"
               style={{
                 textDecoration: 'none',
                 fontWeight: "bolder",
-                color: "#ffbb00"
+                color: "#9945FF"
               }}
             >
               <span>Contract </span>
@@ -669,18 +251,18 @@ function WealthMountain() {
               style={{
                 textDecoration: 'none',
                 fontWeight: "bolder",
-                color: "#ffbb00"
+                color: "#9945FF"
               }}
             >
               <span>Whitepaper</span>
             </a>
           </Item>
-          <Item style={{ border: "solid #ffbb00 4px" }}>
+          <Item style={{ border: "solid #9945FF 4px" }}>
             <a href="https://lottery.wcminer.com/" target="__blank"
               style={{
                 textDecoration: 'none',
                 fontWeight: "bolder",
-                color: "#ffbb00"
+                color: "#9945FF"
               }}
             >
               <span>Lottery </span>
@@ -689,9 +271,8 @@ function WealthMountain() {
         </div>
 
         <Button
-          className='custom-button desktop-button'
-          style={{ maxHeight: "43px", backgroundColor: '#000000b8', color: '#ffbb00' }}>
-          {connectButtonText}
+          className='custom-button desktop-button'>
+          Connect
         </Button>
         <div
           className='mobile_btn'
@@ -721,13 +302,13 @@ function WealthMountain() {
               <Card body className="text-center text-lightblue">
                 <h5 className="calvino text-lightblue">TVL</h5>
                 <h5 className="source font-weight-bold text-white">
-                  {Number(contractBalance) === 0 ? <>?</> : <>${Number(contractBalance).toFixed(0)}</>}
+                  12
                 </h5>
               </Card>
               <Card body className="text-center text-lightblue">
                 <h5 className="calvino text-lightblue">Users</h5>
                 <h5 className="source font-weight-bold text-white">
-                  {Number(totalUsers) === 0 ? <>?</> : <>{Number(totalUsers)}</>}
+                  387
                 </h5>
               </Card>
               <Card body className="text-center text-lightblue">
@@ -749,7 +330,7 @@ function WealthMountain() {
               <Card body className="text-center text-lightblue">
                 <h4 className="calvino text-lightblue">Total Staked Value</h4>
                 <h1 className="source font-weight-bold text-white">$<TotalStakedValue /></h1>
-                <UnstakeOptions />
+                <Button outline className="custom-button mt-3 source">Start a stake to see your info</Button>
               </Card>
               <Card body className="text-center text-lightblue">
                 <h4 className="calvino text-lightblue">Total Earnings</h4>
@@ -763,8 +344,8 @@ function WealthMountain() {
                 </CardDeck>
                 <Row>
                   <Col>
-                    <Button className="custom-button source mt-3" outline onClick={compound}>compound</Button>
-                    <Button className="custom-button source mt-3" outline onClick={withdrawDivs}>collect</Button>
+                    <Button className="custom-button source mt-3" outline >compound</Button>
+                    <Button className="custom-button source mt-3" outline >collect</Button>
                   </Col>
                 </Row>
                 <small className="pt-2 source">Note: Collecting will reset all stakes to 3.5% daily. Compound will add to your stakes while doing the same.</small>
@@ -773,16 +354,13 @@ function WealthMountain() {
             <CardDeck className="pl-3 pr-3 pb-3">
               <Card body className="text-center text-lightblue">
                 <h5 className="calvino text-lightblue">Referrals Earned</h5>
-                {refBonusLoading ? <></> :
-                  <>
-                    <h4 className="source font-weight-bold text-white">${referralAccrued}</h4>
-                    <Row>
-                      <Col>
-                        <Button className="custom-button source mt-2" outline onClick={stakeRefBonus}>STAKE</Button>
-                        <Button className="custom-button source mt-2" outline onClick={withdrawRefBonus}>COLLECT</Button>
-                      </Col>
-                    </Row>
-                  </>}
+                <h4 className="source font-weight-bold text-white">${referralAccrued}</h4>
+                <Row>
+                  <Col>
+                    <Button className="custom-button source mt-2" outline >STAKE</Button>
+                    <Button className="custom-button source mt-2" outline >COLLECT</Button>
+                  </Col>
+                </Row>
 
               </Card>
               <Card body className="text-center text-lightblue">
@@ -795,7 +373,7 @@ function WealthMountain() {
               <Card body className="text-center text-lightblue">
                 <h4 className="calvino text-lightblue" style={{ lineHeight: "10px" }}>CURRENT STAKES</h4>
                 <small className="pt-0 pb-4 source">Here's a list of all of your current stakes.</small>
-                <ListOfUserStakes />
+                <small className="font-weight-bold source text-lightblue">Nothing to show here.</small>
               </Card>
               <Card hidden body className="text-center text-lightblue">
                 <h4 className="calvino text-lightblue">Days Staked</h4>
@@ -837,7 +415,6 @@ function WealthMountain() {
                       <Input
                         className="custom-input text-center source"
                         placeholder="Minimum 50 BUSD"
-                        // onChange={(e) => this.setCalcAmount(`${e.target.value}`)}
                         onChange={updateCalc}
                       ></Input>
                     </InputGroup>
@@ -895,11 +472,10 @@ function WealthMountain() {
                     <Input
                       className="custom-input text-center source"
                       placeholder="Minimum 50 BUSD"
-                      onChange={updateStakingAmount}
                     ></Input>
                   </InputGroup>
-                  <Button onClick={approveButton} className="custom-button mt-4 source font-weight-bold">APPROVE</Button>
-                  <Button onClick={stakeAmount} className="custom-button mt-4 source font-weight-bold">STAKE</Button>
+                  <Button className="custom-button mt-4 source font-weight-bold">APPROVE</Button>
+                  <Button className="custom-button mt-4 source font-weight-bold">STAKE</Button>
                 </FormGroup>
               </Form>
               <small className="source text-lightblue">Note: Stakes are not locked. You can unstake at any time.</small><br />
@@ -1013,9 +589,9 @@ function WealthMountain() {
       <div style={{ margin: "50px 20px", textAlign: 'center', alignItems: 'center', color: 'white' }}>
         <h2 className='text-white' style={{ fontWeight: 'bold', margin: '80px 0px 50px 0px' }}>EARN 3.3% DAILY REWARDS ON WC MINER BNB</h2>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <div style={{ background: 'black', border: 'solid 3px #fa9a00', borderRadius: '20px', padding: '50px 80px ' }}>
+          <div style={{ background: 'black', border: 'solid 3px #9945FF', borderRadius: '20px', padding: '50px 80px ' }}>
             <h2 className='text-white' style={{ fontWeight: 'bold', marginBottom: '30px' }}>MINER</h2>
-            <a href="https://wcminer.com/" target="_blank" style={{ fontSize: '20px', fontWeight: '600', background: '#ffbb00', padding: '10px 50px', borderRadius: '10px' }}>
+            <a href="https://wcminer.com/" target="_blank" style={{ fontSize: '20px', fontWeight: '600', background: '#9945FF', padding: '10px 50px', borderRadius: '10px' }}>
               <span className='source'>INVEST</span>
             </a>
           </div>
