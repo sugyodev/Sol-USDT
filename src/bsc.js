@@ -6,12 +6,9 @@ import 'aos/dist/aos.css';
 import './App.css';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { useContract } from 'wagmi'
 import wealthMountainABI from './contracts/WealthMountainBSC.json';
 import styled from "styled-components";
-import { Tabs, Tab, TabPanel } from "./components/tabs/tabs";
 import SelectObject from "./components/SelectCoin";
 import { FaCopy, FaWallet, FaUserShield, FaSearchDollar } from 'react-icons/fa';
 import { GiHamburgerMenu } from "react-icons/gi"
@@ -39,10 +36,6 @@ import {
 import { ethers, Contract } from 'ethers';
 
 AOS.init({ duration: 2000 });
-const TabsContainer = styled.div`
-  display: flex;
-  padding: 2px;
-`;
 
 const Item = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -58,10 +51,6 @@ const Item = styled('div')(({ theme }) => ({
   alignSelf: 'center',
   fontFamily: 'Roboto',
 }));
-
-const web3 = new Web3(
-  new Web3.providers.HttpProvider("https://bsc-dataseed1.binance.org/")
-);
 
 let contractAbi = [
   {
@@ -102,8 +91,7 @@ console.log(abiDecoder, contractAbi);
 // abiDecoder.addABI(contractAbi);
 const abiCoder = require("web3-eth-abi");
 console.log(abiCoder);
-const investFunc = /^0x3acb1a0a/;
-const claimFunc = /^0x9ddf840d/;
+
 const inputs = [
   {
     "internalType": "uint256",
@@ -117,16 +105,11 @@ const inputs = [
   }
 ];
 
-const decodeFunction = (data) => {
-  let decoded = abiCoder.decodeParameters(inputs, data.slice(10));
-  return decoded.amtx / 10 ** 18;
-}
 
 function WealthMountain() {
   const [sliderValue, setSliderValue] = useState('50');
   const [dropdownOpen, setOpen] = React.useState(false);
   const [userInfo, setUserInfo] = useState([]);
-  const [activeTab, setActiveTab] = useState(1);
   const [calcTotalDividends, setCalcTotalDividends] = useState("")
   const [initalStakeAfterFees, setInitalStakeAfterFees] = useState("")
   const [dailyPercent, setDailyPercent] = useState("");
@@ -136,8 +119,6 @@ function WealthMountain() {
   const [contractBalance, setContractBalance] = useState("");
   const [referralAccrued, setReferralAccrued] = useState("");
   const [totalUsers, setTotalUsers] = useState("");
-  // const [totalCompounds, setTotalCompounds] = useState("")
-  // const [totalCollections, setTotalCollections] = useState("")
   const [dayValue10, setDayValue10] = useState("864000");
   const [dayValue20, setDayValue20] = useState("1728000");
   const [dayValue30, setDayValue30] = useState("2592000");
@@ -190,10 +171,6 @@ function WealthMountain() {
     init();
   }, []);
 
-  const handleChange = (e, value) => {
-    setActiveTab(value);
-    recalculateInfo()
-  }
   window.addEventListener("focus", function () {
     recalculateInfo();
   })
@@ -204,7 +181,6 @@ function WealthMountain() {
       `https://api.bscscan.com/api?module=account&action=txlist&address=${address}&startblock=21869046&endblock=99999999&apikey=YGKJFMK5FW1H9T9GR9VTGIT2UC5PXUTDTB`
     );
     const parsedData = await returnedData.json();
-    // console.log("Transaction history: ", parsedData);
     if (parsedData.status === "1") {
       const transactions = parsedData.result;
       let count = 0;
@@ -290,12 +266,6 @@ function WealthMountain() {
     contract.UsersKey(String(userWalletAddress)).then(value => {
       setReferralAccrued(Number(ethers.utils.formatEther(value.refBonus)).toFixed(2));
     })
-    // contract.MainKey(1).then(value => {
-    //     setTotalUsers(Number(value.users));
-    //     // setTotalCompounds(Number(value.compounds))
-    //     // setTotalCollections(Number(ethers.utils.formatEther(value.ovrTotalWiths)))
-    // })
-
     contract.PercsKey(10).then(value => {
       setDayValue10(Number(value.daysInSeconds))
     })
@@ -357,7 +327,6 @@ function WealthMountain() {
   async function approveButton() {
     const tx = stablecoinContract.approve(contract.address, String(ethers.utils.parseEther(stakingAmount)));
     tx.wait().then(() => {
-      // recalculateInfo();
       recalcAllowance();
     })
   }
@@ -372,11 +341,11 @@ function WealthMountain() {
     if (referralAddress === 'null' || referralAddress.includes("0x") === false) {
       const tx = await contract.stakeStablecoins(
         String(ethers.utils.parseEther(stakingAmount)), String("0x0000000000000000000000000000000000000000"));
-      tx.wait().then(() => { setActiveTab(0) });
+      tx.wait();
     } else {
       const tx = await contract.stakeStablecoins(
         String(ethers.utils.parseEther(stakingAmount)), String(referralAddress));
-      tx.wait().then(() => { setActiveTab(0) });
+      tx.wait();
     }
   }
   async function stakeRefBonus() {
@@ -468,7 +437,6 @@ function WealthMountain() {
         var unstakeFee = '';
         const elapsedTime = (Date.now() / 1000 - (depoStart));
         var totalEarned = '0';
-        // var daysToMax = Number((dayValue50 - elapsedTime) / 86400).toFixed(1);
         var daysToMax = Number((dayValue50 - elapsedTime) / 86400).toFixed(1)
         if (elapsedTime <= dayValue10) {
           dailyPercent = '3.5'
@@ -545,7 +513,7 @@ function WealthMountain() {
     if (userInfo.length == 0) {
       return (
         <>
-          <Button outline className="custom-button mt-3 source" onClick={() => { setActiveTab(1) }}>Start a stake to see your info</Button>
+          <Button outline className="custom-button mt-3 source">Start a stake to see your info</Button>
         </>
       )
     }
@@ -635,7 +603,6 @@ function WealthMountain() {
                   }}
                 >
                   <span> Whitepaper </span>
-                  {/* <TwitterIcon/> */}
                 </a>
               </div>
               <div onClick={() => {
@@ -856,7 +823,65 @@ function WealthMountain() {
           </div>
         </Container>
       </div>
-
+      <div>
+        <Container className="pt-3">
+          <Card body>
+            <h2 className="calvino text-center text-lightblue">Earnings Calculator</h2>
+            <CardDeck>
+              <Card body className="text-center">
+                <h3 className="calvino font-weight-bold text-lightblue">Staking</h3>
+                <Form>
+                  <FormGroup>
+                    <Label className="source font-weight-bold text-lightblue">Stake Amount</Label>
+                    <InputGroup>
+                      <Input
+                        className="custom-input text-center source"
+                        placeholder="Minimum 50 BUSD"
+                        // onChange={(e) => this.setCalcAmount(`${e.target.value}`)}
+                        onChange={updateCalc}
+                      ></Input>
+                    </InputGroup>
+                  </FormGroup>
+                </Form>
+                <Label className="source font-weight-bold text-lightblue">Days Staked</Label>
+                <Col className="text-center">
+                  <Box>
+                    <Slider
+                      defaultValue={50}
+                      aria-label="Default"
+                      valueLabelDisplay="auto"
+                      color='primary'
+                      onChange={(_, v) => calculate(v)} />
+                  </Box>
+                </Col>
+              </Card>
+              <Card body className="text-center">
+                <h3 className="calvino font-weight-bold text-lightblue">Earnings</h3>
+                <CardDeck>
+                  <Card style={{ background: 'rgba(0, 0, 0, 0.5)' }}>
+                    <h3 className="calvino text-white">${calcTotalDividends}</h3>
+                    <small className="source text-white">total dividends earned</small>
+                  </Card>
+                  <Card style={{ background: 'rgba(0, 0, 0, 0.5)' }}>
+                    <h3 className="calvino text-white">${initalStakeAfterFees}</h3>
+                    <small className="source text-white">initial stake after fees</small>
+                  </Card>
+                </CardDeck>
+                <CardDeck className="pt-3">
+                  <Card style={{ background: 'rgba(0, 0, 0, 0.5)' }}>
+                    <h3 className="calvino text-white">{dailyPercent}%</h3>
+                    <small className="source text-white">earning daily (%)</small>
+                  </Card>
+                  <Card style={{ background: 'rgba(0, 0, 0, 0.5)' }}>
+                    <h3 className="calvino text-white">${dailyValue}</h3>
+                    <small className="source text-white">earning daily ($)</small>
+                  </Card>
+                </CardDeck>
+              </Card>
+            </CardDeck>
+          </Card>
+        </Container>
+      </div>
       <div className='enter-stake main-content'>
         <Container className="pt-3">
           <CardDeck className="p-3">

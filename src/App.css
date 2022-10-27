@@ -124,6 +124,12 @@ hr.rounded {
   }
 }
 
+#root{
+  background-image: url('../public//background-image.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 
 /*!
 
