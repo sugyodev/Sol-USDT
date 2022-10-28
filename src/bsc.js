@@ -9,7 +9,6 @@ import Slider from '@mui/material/Slider';
 import styled from "styled-components";
 import SelectObject from "./components/SelectCoin";
 import { FaCopy, FaWallet, FaUserShield, FaSearchDollar } from 'react-icons/fa';
-import { GiHamburgerMenu } from "react-icons/gi"
 import banner_demountain from "./assets/demountain.mp4";
 import {
   Button,
@@ -28,36 +27,17 @@ import { ethers } from 'ethers';
 
 AOS.init({ duration: 2000 });
 
-const Item = styled('div')(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  padding: '5px 20px',
-  margin: '0px 20px',
-  textAlign: 'center',
-  fontSize: "20px",
-  color: 'white',
-  borderRadius: "1.25rem",
-  background: "#000000b8",
-  minWidth: '150px',
-  alignSelf: 'center',
-  fontFamily: 'Roboto',
-}));
 
 function WealthMountain() {
   const [sliderValue, setSliderValue] = useState('50');
-  const [userInfo, setUserInfo] = useState([]);
   const [calcTotalDividends, setCalcTotalDividends] = useState("")
   const [initalStakeAfterFees, setInitalStakeAfterFees] = useState("")
   const [dailyPercent, setDailyPercent] = useState("");
   const [dailyValue, setDailyValue] = useState("");
-  const [calculatedDividends, setCalculatedDividends] = useState(0);
-  const [referralAccrued, setReferralAccrued] = useState("");
   const [userWalletAddress, setUserWalletAddress] = useState('none');
   const [userStablecoinBalance, setUserStablecoinBalance] = useState(0);
   const [stablecoinAllowanceAmount, setStablecoinAllowanceAmount] = useState(0);
   const videoRef = useRef();
-
-  const [mobile, setMobile] = useState(false);
 
   const [auditNo, setAuditNo] = useState('https://georgestamp.xyz/2022/09/wc-miner-busd/');
   const [cnt, setCnt] = useState(0);
@@ -118,174 +98,34 @@ function WealthMountain() {
       setDailyValue(Number(initalStakeAfterFees * .085).toFixed(2))
     }
   }
-  function TotalStakedValue() {
-    var total = 0;
-    for (var i = 0; i < userInfo.length; i++) {
-      total += Number(ethers.utils.formatEther(userInfo[i].amt))
-    }
-    return (<>{total.toFixed(2)}</>)
-  }
-  function TotalEarnedValue() {
-    var value = calculatedDividends;
-
-    return (<>{value.toFixed(3)}</>)
-  }
-
-  function TotalEarnedPercent() {
-    var total = 0;
-    for (var i = 0; i < userInfo.length; i++) {
-      total += Number(ethers.utils.formatEther(userInfo[i].amt))
-    }
-    const value = calculatedDividends
-    var totalEarnedPercent = Number((value / total) * 100).toFixed(3) + "%";
-    if (totalEarnedPercent === "NaN%") {
-      totalEarnedPercent = 0
-    }
-    return (<>{totalEarnedPercent}</>)
-  }
 
   return (
     <>
-      {mobile === true ? (
-        <div className="mobile_head">
-          <div className="mobile_herader_content">
-            <div style={{ alignSelf: "center", marginBottom: "30px" }}>
-              SOL-USDT
-            </div>
-            <div className="mobile_four_btn">
-              <div onClick={() => {
-                setMobile(true)
-              }}>
-                <SelectObject value={auditNo} onChangeAuditNo={onChangeAuditNo} />
+      <img src='sub-img-top.png' className='header-top-img' />
+      <img src='sub-img-left.png' className='body-left-img' />
+      <div className='main-content header'>
+        <Container>
+          <Row>
+            <Col>
+              <div className='header-logo'>
+                <img src='logo-icon.png' />
+                <img src='logo-icon.png' />
+                <span>SOL USDT MINER</span>
               </div>
-              <div onClick={() => {
-                setMobile(true)
-              }}>
-                <a href="https://bscscan.com/address/0xbcae54cdf6a1b1c60ec3d44114b452179a96c1e3" target="_blank" rel="noreferrer"
-                  className="swap_btn"
-                  style={{
-                    color: 'white',
-                    textDecoration: 'none',
-                    fontWeight: "bolder",
-                    fontFamily: 'Roboto'
-                  }}
-                >
-                  Contract
-                </a>
-              </div>
-              <div onClick={() => {
-                setMobile(true)
-              }}>
-                <a href="/whitepaper.pdf" target="_blank" rel="noreferrer"
-                  className="stable_btn"
-                  style={{
-                    color: 'white',
-                    textDecoration: 'none',
-                    fontWeight: "bolder",
-                    fontFamily: 'Roboto'
-                  }}
-                >
-                  <span> Whitepaper </span>
-                </a>
-              </div>
-              <div onClick={() => {
-                setMobile(true)
-              }}>
-                <a href="https://lottery.wcminer.finance/" target="__blank"
-                  className="bridge_btn"
-                  style={{
-                    color: 'white',
-                    textDecoration: 'none',
-                    fontWeight: "bolder",
-                    fontFamily: 'Roboto'
-                  }}
-                >
-                  Lottery
-                </a>
-              </div>
-            </div>
-            <div style={{ flex: 1 }}></div>
-            <div
-              className="mobile_connect"
-            >
-              <Button
-                className='custom-button'
-              >
-                CONNECT
-              </Button>
-            </div>
-          </div>
-          <div
-            className="empty_mobile"
-            onClick={() => {
-              setMobile(false)
-            }}
-          ></div>
-        </div>
-      )
-        : null}
-      <div className="custom-header">
-        <h1 style={{ fontWeight: 800 }}>SOL-USDT</h1>
-        <div className="header_menu">
-          <Item>
-
-            <SelectObject value={auditNo} onChangeAuditNo={onChangeAuditNo} color='#9945FF' />
-          </Item>
-          <Item>
-            <a href="https://bscscan.com/address/0xbcae54cdf6a1b1c60ec3d44114b452179a96c1e3" target="_blank" rel="noreferrer"
-              style={{
-                textDecoration: 'none',
-                fontWeight: "bolder",
-                color: "#9945FF"
-              }}
-            >
-              <span>Contract </span>
-            </a>
-          </Item>
-          <Item>
-            <a href="/whitepaper.pdf" target="_blank"
-              style={{
-                textDecoration: 'none',
-                fontWeight: "bolder",
-                color: "#9945FF"
-              }}
-            >
-              <span>Whitepaper</span>
-            </a>
-          </Item>
-          <Item style={{ border: "solid #9945FF 4px" }}>
-            <a href="https://lottery.wcminer.com/" target="__blank"
-              style={{
-                textDecoration: 'none',
-                fontWeight: "bolder",
-                color: "#9945FF"
-              }}
-            >
-              <span>Lottery </span>
-            </a>
-          </Item>
-        </div>
-
-        <Button
-          className='custom-button desktop-button'>
-          Connect
-        </Button>
-        <div
-          className='mobile_btn'
-          onClick={() => {
-            setMobile(true)
-          }}
-        >
-          <GiHamburgerMenu />
-        </div>
-      </div>
-      <div className='main-content'>
+            </Col>
+            <Col>
+              <Button className="custom-button connect-btn mt-3 col" outline >Connect</Button>
+            </Col>
+          </Row>
+        </Container>
+      </div >
+      <div className='main-content' >
         <Container>
           <div
-            style={{ width: '100%', padding: '10px 15px' }}
+            style={{ width: '100%', padding: '10px 15px', marginTop: '60px' }}
           >
             <a href="https://busd.demountain.finance/auction/?ref=0x5886b6b942f8dab2488961f603a4be8c3015a1a9" target="_blank">
-              <video src={banner_demountain} playsInline loop={true} muted="unmuted" width="100%" style={{ cursor: 'pointer' }} ref={videoRef}></video>
+              <video src={banner_demountain} playsInline loop={true} muted="unmuted" width="100%" style={{ cursor: 'pointer', borderRadius: '10px' }} ref={videoRef}></video>
             </a>
           </div>
         </Container>
@@ -325,17 +165,17 @@ function WealthMountain() {
             <CardDeck className="p-3">
               <Card body className="text-center text-lightblue">
                 <h4 className="calvino text-lightblue">Total Staked Value</h4>
-                <h1 className="source font-weight-bold text-white">$<TotalStakedValue /></h1>
+                <h1 className="source font-weight-bold text-white">$0.00</h1>
                 <Button outline className="custom-button mt-3 source">Start a stake to see your info</Button>
               </Card>
               <Card body className="text-center text-lightblue">
                 <h4 className="calvino text-lightblue">Total Earnings</h4>
                 <CardDeck>
                   <Card style={{ background: "transparent" }}>
-                    <h4 className="source font-weight-bold text-white"><TotalEarnedPercent /></h4>
+                    <h4 className="source font-weight-bold text-white">10</h4>
                   </Card>
                   <Card style={{ background: "transparent" }}>
-                    <h4 className="source font-weight-bold text-white">$<TotalEarnedValue /></h4>
+                    <h4 className="source font-weight-bold text-white">$0.000</h4>
                   </Card>
                 </CardDeck>
                 <Row>
@@ -350,7 +190,7 @@ function WealthMountain() {
             <CardDeck className="pl-3 pr-3 pb-3">
               <Card body className="text-center text-lightblue">
                 <h5 className="calvino text-lightblue">Referrals Earned</h5>
-                <h4 className="source font-weight-bold text-white">${referralAccrued}</h4>
+                <h4 className="source font-weight-bold text-white">$24</h4>
                 <Row>
                   <Col>
                     <Button className="custom-button source mt-2" outline >STAKE</Button>
@@ -456,6 +296,7 @@ function WealthMountain() {
         </Container>
       </div>
       <div className='enter-stake main-content'>
+        {/* <img src='sub-img-bottom.png' style={{position:'absolute', width:'100%', bottom:'0px'}}/> */}
         <Container className="pt-3">
           <CardDeck className="p-3">
             <Card body className="text-center text-lightblue">
@@ -579,34 +420,21 @@ function WealthMountain() {
               </Container>
             </div>
           </Parallax>
-        </Container>
-      </div>
-
-      <div style={{ margin: "50px 20px", textAlign: 'center', alignItems: 'center', color: 'white' }}>
-        <h2 className='text-white' style={{ fontWeight: 'bold', margin: '80px 0px 50px 0px' }}>EARN 3.3% DAILY REWARDS ON WC MINER BNB</h2>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <div style={{ background: 'black', border: 'solid 3px #9945FF', borderRadius: '20px', padding: '50px 80px ' }}>
-            <h2 className='text-white' style={{ fontWeight: 'bold', marginBottom: '30px' }}>MINER</h2>
-            <a href="https://wcminer.com/" target="_blank" style={{ fontSize: '20px', fontWeight: '600', background: '#9945FF', padding: '10px 50px', borderRadius: '10px' }}>
-              <span className='source'>INVEST</span>
-            </a>
+          <div className="pt-5 text-center calvino text-lightblue">
+            <div className="custom-footer" style={{ backgroundColor: 'white' }}>
+              <SelectObject value={auditNo} onChangeAuditNo={onChangeAuditNo} />
+              <a href="https://bscscan.com/address/0xbcae54cdf6a1b1c60ec3d44114b452179a96c1e3" target="_blank" rel="noreferrer"> CONTRACT </a>
+              <a href="/whitepaper.pdf" target="_blank" rel="noreferrer"> DOCS </a>
+              <a href="https://twitter.com/WolfOfCrypto885" target="_blank" rel="noreferrer"> TWITTER </a>
+              <a href="https://t.me/WCMinerBUSD" target="_blank" rel="noreferrer"> TELEGRAM </a>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="pt-5 text-center calvino text-lightblue">
-        <Card style={{ borderRadius: '0px', padding: '70px 10px 50px 10px' }}>
-          <CardDeck className="custom-footer">
-            <SelectObject value={auditNo} onChangeAuditNo={onChangeAuditNo} />
-            <a href="https://bscscan.com/address/0xbcae54cdf6a1b1c60ec3d44114b452179a96c1e3" target="_blank" rel="noreferrer"> CONTRACT </a>
-            <a href="/whitepaper.pdf" target="_blank" rel="noreferrer"> DOCS </a>
-            <a href="https://twitter.com/WolfOfCrypto885" target="_blank" rel="noreferrer"> TWITTER </a>
-            <a href="https://t.me/WCMinerBUSD" target="_blank" rel="noreferrer"> TELEGRAM </a>
-          </CardDeck>
-          <p style={{ fontSize: '20px', color: 'white', paddingTop: '30px', fontWeight: 'bold' }}>© Wolf of Crypto Team , All Rights Reserved</p>
-        </Card>
+          <p className="custom-footer-desc">COPYRIGHT © 2022 SOLSEARCHER.FINANCE ALL RIGHTS RESERVED</p>
+        </Container>
+        <img src='sub-img-bottom.png' className='footer-img-bottom' />
+        <img src='sub-img-bottom-right.png' className='footer-img-bottom-right' />
       </div>
     </>
-
   )
 }
 export default WealthMountain;

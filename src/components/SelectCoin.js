@@ -99,9 +99,10 @@ const StyledListbox = styled('ul')(
   box-sizing: border-box;
   padding: 5px;
   margin: 10px 0;
-  min-width: 106px;
+  margin-right:80px;
+  min-width: 136px;
   max-height: 200px;
-  background: #2e2f31;
+  background: white;
   border-radius: 0.75em;
   color: #ffbb00;
   overflow: auto;
@@ -113,14 +114,16 @@ const StyledListbox = styled('ul')(
 
 const StyledOption = styled(OptionUnstyled)(
   ({ theme }) => `
-  background: #2e2f31;
+  background: white;
+  text-align:center;
   list-style: none;
-  padding: 8px;
+  padding:8px;
   border-radius: 0.45em;
   cursor: default;
   z-index: 2;
   &:hover {
-    background: #3b3c3e;
+    // background: #9945FF;
+    // color:white !important;
   }
   &:last-of-type {
     border-bottom: none;
@@ -165,7 +168,7 @@ export default function UnstyledSelectRichOptions({ value, onChangeAuditNo, resp
     <CustomSelect value={value} onChange={(e) => onChangeAuditNo(e.target.value)} responsive={responsive}>
       {coins.map((c) => (
         <StyledOption key={c.code} value={c.code} >
-          <a href={c.code} target="blank" style={{color: color}}>{c.label}</a>
+          <a href={c.code} target="blank">{c.label}</a>
         </StyledOption>
       ))}
     </CustomSelect>
