@@ -1,0 +1,155 @@
+.aptos {
+  background: #06182D;
+}
+
+.aptos-text {
+  color: #12BED1;
+}
+
+.custom-button {
+  background: linear-gradient(89.72deg, #1263D1 -14.51%, #18DBEB 40.59%, #1263D1 108.24%);
+  color: black;
+  mix-blend-mode: normal;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  border: none;
+  font-weight: 'bold';
+  font-family: 'Roboto';
+}
+
+.aptos-card .card {
+  background-color: #071E45;
+  border-radius: 15px;
+}
+
+.aptos-switch {
+  background: radial-gradient(100% 2025% at 0% 65.38%, #00C9FF 0%, #1262D0 100%);
+  width: 250px;
+  float: left;
+  color: white;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.aptos-connect {
+  background: radial-gradient(100% 2025% at 0% 65.38%, #00C9FF 0%, #1262D0 100%);
+  width: 250px;
+  float: right;
+  color: white;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+@media only screen and (max-width: 973px) and (min-width: 200px){
+  .aptos-switch{
+    width: 100%;
+  }
+  .aptos-connect{
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 767.5px) and (min-width: 200px){
+  .aptos-connect{
+    margin-top: 20px !important;
+  }
+}
+
+
+.logo {
+  text-align: center;
+}
+
+.aptos-custom-footer {
+  padding: 8px 2px;
+  display: grid;
+  grid-auto-flow: column;
+  margin: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  justify-content: space-evenly;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  width: 70%;
+  margin: auto;
+  align-self: center;
+  border-radius: 15px;
+}
+
+
+.aptos-custom-footer a {
+  font-weight: 800;
+  font-size: 16px;
+  padding-top: 3.5px;
+}
+
+.aptos-custom-footer a:hover {
+  color: #12BED1;
+}
+
+.aptos-custom-footer:hover {
+  box-shadow:
+    0 0 10px #fff,
+    0 0 20px #12BED1,
+    0 0 31px #12BED1;
+}
+
+.aptos-custom-footer-desc{
+  margin-top: 20px;
+  color: white;
+  text-align: center;
+  font-weight: 600;
+}
+
+
+@media only screen and (max-width: 750px) {
+  .aptos-custom-footer {
+    width: 100%;
+  }
+
+  .aptos-custom-footer a {
+    font-size: 12px;
+  }
+
+  .aptos-custom-footer-desc {
+    font-size: 10px;
+  }
+}
+
+.aptos-slider .MuiSlider-thumb {
+  color: #00C9FF;
+}
+
+.aptos-slider .MuiSlider-rail {
+  color: white;
+}
+
+.aptos-slider .MuiSlider-track {
+  color: #00C9FF;
+}
+
+.aptos-bg-1{
+  position: absolute;
+  width: 100%;
+}
+
+.aptos-bg-2{
+  position: absolute;
+  left: 0;
+  top: 700px;
+  width: 40%;
+}
+
+.aptos-bg-3{
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+}
+
+.aptos-bg-4{
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  width: 50%;
+}

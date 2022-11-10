@@ -95,10 +95,6 @@ hr.rounded {
   color: grey;
 }
 
-.text-lightblue {
-  color: #14F195;
-}
-
 .roundBorder {
   border-radius: 10px;
 }
@@ -132,12 +128,6 @@ hr.rounded {
   to {
     transform: rotate(360deg);
   }
-}
-
-#root {
-  background-image: url('../public//background-image-2.png');
-  background-size: cover;
-  background-repeat: no-repeat;
 }
 
 
@@ -237,7 +227,7 @@ body {
   color: #525f7f;
   text-align: left;
   /* background: url('./assets/img/bg.jpg'); */
-  background: #495057;
+  /* background: #495057; */
 
   background-size: cover !important;
   background-repeat: no-repeat !important;
@@ -556,7 +546,6 @@ h6,
   font-family: inherit;
   font-weight: 400;
   line-height: 1.5;
-  color: #9945FF;
 }
 
 h1,
@@ -627,7 +616,7 @@ hr {
 
 small,
 .small {
-  font-size: 80%;
+  font-size: 100%;
   font-weight: 400;
 }
 
@@ -5309,17 +5298,6 @@ input[type="button"].btn-block {
   color: rgba(255, 255, 255, 0.65);
 }
 
-.card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  word-wrap: break-word;
-  background-color: rgb(147 115 255 / 20%);
-  background-clip: border-box;
-  border: 0.0625rem solid rgba(0, 0, 0, 0.05);
-  border-radius: 0.25rem;
-}
 
 .card>hr {
   margin-right: 0;
@@ -18463,9 +18441,6 @@ a.btn-icon-only {
   box-shadow: none, 0 0 0 0 rgba(34, 34, 34, 0.5);
 }
 
-.card {
-  position: relative;
-}
 
 .card.card-plain {
   background: transparent;
@@ -25435,163 +25410,10 @@ td.rdtYear:hover {
   z-index: 2;
 }
 
-.custom-button {
-  background: linear-gradient(252.57deg, #14F195 14.83%, #9945FF 87.59%);
-  color: black;
-  mix-blend-mode: normal;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
-  border: none;
-  font-weight: 'bold';
-  min-width: 134px;
-  font-family: 'Roboto';
-}
-
 .header .container {
-  padding-top: 100px;
+  padding-top: 80px;
   padding-left: 40px;
   padding-right: 40px;
-}
-
-.header .connect-btn {
-  margin-top: -20px;
-  float: right;
-  width: 50%;
-}
-
-.header-logo {
-  margin-top: 20px;
-  padding-left: 10px;
-  width: 300px;
-  height: 45px;
-  background: #14F195;
-  mix-blend-mode: normal;
-  box-shadow: 0px -10px 0px rgba(20, 241, 149, 0.65);
-  border-radius: 15px;
-}
-
-.header-logo span {
-  font-family: 'Round Control';
-  font-style: normal;
-  font-weight: 800;
-  font-size: 24px;
-  line-height: 38px;
-  color: #000000;
-  margin-left: 8px;
-}
-
-.header-logo img {
-  margin-top: -5px;
-  width: 24px;
-}
-
-.header-top-img {
-  right: 30%;
-  width: 280px;
-  position: absolute;
-  opacity: 0.7;
-}
-
-.body-left-img {
-  position: absolute;
-  left: 0px;
-  top: 70%;
-  opacity: 0.7;
-  width: 220px;
-}
-
-.footer-img-bottom{
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-}
-
-.footer-img-bottom-right{
-  position: absolute;
-  right: 0px;
-  bottom: 0px;
-}
-
-@media only screen and (max-width: 780px) {
-  .header-logo {
-    width: 220px;
-    height: 40px;
-    box-shadow: 0px -6px 0px rgba(20, 241, 149, 0.65);
-  }
-
-  .header-logo img {
-    width: 16px;
-  }
-
-  .header-logo span {
-    font-size: 16px;
-  }
-
-  .header-top-img {
-    right: 30%;
-    width: 200px;
-    position: absolute;
-    opacity: 0.5;
-  }
-
-  .body-left-img {
-    width: 150px;
-  }
-}
-
-@media only screen and (max-width: 500px) {
-  .header-logo {
-    width: 145px;
-    height: 35px;
-    box-shadow: 0px -6px 0px rgba(20, 241, 149, 0.65);
-  }
-
-  .header-logo img {
-    margin-top: 0px;
-    width: 11px;
-  }
-
-  .header-logo span {
-    font-size: 11px;
-  }
-
-  .header .connect-btn {
-    margin-top: -20px;
-    float: right;
-    font-size: 13px;
-  }
-}
-
-.card {
-  color: #53cac0;
-  background-color: rgb(147 115 255 / 20%);
-  border-radius: 15px;
-}
-
-.custom-header {
-  display: grid;
-  justify-content: center;
-  padding-top: 2rem;
-  gap: 1rem;
-  margin: 0px 50px;
-}
-
-.header_menu {
-  display: flex;
-  justify-content: space-evenly;
-  align-self: center;
-}
-
-.MuiSlider-thumb {
-  color: #14F195;
-}
-
-.MuiSlider-rail {
-  color: rgba(255, 255, 255, 0.15);
-}
-
-.MuiSlider-track {
-  color: #14F195;
 }
 
 .css-wyqvlf{
@@ -25621,81 +25443,12 @@ td.rdtYear:hover {
   color: white;
 }
 
-.custom-footer {
-  padding: 8px 2px;
-  display: grid;
-  grid-auto-flow: column;
-  margin: 0;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  justify-content: space-evenly;
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
-  width: 70%;
-  align-self: center;
-  box-shadow: 0px -6px 0px rgba(255, 255, 255, 0.65);
-  border-radius: 15px;
-  float: right;
-}
-
-.custom-footer:hover {
-  box-shadow:
-    0 0 10px #fff,
-    0 0 20px #9945FF,
-    0 0 31px #9945FF;
-}
-
-.custom-footer a {
-  font-weight: 800;
-  font-size: 16px;
-  padding-top: 3.5px;
-}
-
-.custom-footer a:hover {
-  color: #9945FF;
-}
-
-.custom-footer-desc {
-  font-size: 14px;
-  color: white;
-  padding-top: 50px;
-  text-align: right;
-  font-weight: bold;
-}
-
-@media only screen and (max-width: 750px) {
-  .custom-footer {
-    width: 100%;
-  }
-
-  .custom-footer a {
-    font-size: 12px;
-  }
-
-  .custom-footer-desc {
-    font-size: 10px;
-  }
-}
-
 .mobile_head {
   display: none;
 }
 
 .mobile_btn {
   display: none;
-}
-
-.chart1 {
-  width: 500px;
-  /* height: 420px; */
-  background-color: white;
-  border-radius: 12px;
-}
-
-.chart1 tspan {
-  color: red;
-  background: red;
 }
 
 .main-content {

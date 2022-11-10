@@ -98,7 +98,7 @@ const StyledListbox = styled('ul')(
   font-size: 0.875rem;
   box-sizing: border-box;
   padding: 5px;
-  margin: 10px 0;
+  margin: 15px -40px;
   margin-right:80px;
   min-width: 136px;
   max-height: 200px;
