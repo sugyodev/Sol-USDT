@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Parallax } from "react-parallax";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -8,7 +8,8 @@ import '../css/aptos.css';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import SelectObject from "../components/SelectCoin";
-import { FaCopy, FaWallet, FaUserShield, FaSearchDollar } from 'react-icons/fa';
+import { FaCopy, FaWallet, FaUserShield, FaSearchDollar} from 'react-icons/fa';
+import {MdExpandMore, MdExpandLess} from 'react-icons/md';
 import {
   Button,
   Card,
@@ -27,14 +28,15 @@ AOS.init({ duration: 2000 });
 
 
 function WealthMountain() {
+  const [selected, setSelected] = useState(false);
+  const [currentNetwork, setNetwork] = useState('APTOS');
   const [sliderValue, setSliderValue] = useState('50');
   const [calcTotalDividends, setCalcTotalDividends] = useState("")
   const [initalStakeAfterFees, setInitalStakeAfterFees] = useState("")
   const [dailyPercent, setDailyPercent] = useState("");
   const [dailyValue, setDailyValue] = useState("");
-  const [userWalletAddress, setUserWalletAddress] = useState('none');
-  const [userStablecoinBalance, setUserStablecoinBalance] = useState(0);
-  const [stablecoinAllowanceAmount, setStablecoinAllowanceAmount] = useState(0);
+
+  const tvl = 48, users = 197, stake_fee = 18, collect_fee = 22, t_stakevalue = 8200, t_earncompound = 245, t_earncollect = 128, reffered_earn = 650;
 
   const [auditNo, setAuditNo] = useState('https://georgestamp.xyz/2022/09/wc-miner-busd/');
   const [cnt, setCnt] = useState(0);
@@ -48,8 +50,41 @@ function WealthMountain() {
     setAuditNo(audits[(cnt + 1) % 2].link);
   }
 
+  const floatIncrease = (id, val) => {
+    let step = val / 30;
+    step = Math.round(step * 1000) / 1000;
+    let curVal = step;
+    const autoIncrease = setInterval(function () {
+      curVal = Math.round(curVal * 1000) / 1000;
+      if (id === 'aptos-total-staking' || id === 'aptos-referral-earn') {
+        document.getElementById(id).innerHTML = '$' + curVal;
+      } else if (id === 'aptos-total-collect') {
+        document.getElementById(id).innerHTML = '$' + curVal + '.000';
+      } else {
+        document.getElementById(id).innerHTML = curVal;
+      }
+      if (curVal >= val) {
+        clearInterval(autoIncrease);
+        if (id === 'aptos-total-staking' || id === 'aptos-referral-earn') {
+          document.getElementById(id).innerHTML = '$' + val;
+        } else if (id === 'aptos-total-collect') {
+          document.getElementById(id).innerHTML = '$' + val + '.000';
+        } else {
+          document.getElementById(id).innerHTML = val;
+        }
+      }
+      curVal += step;
+    }, 25);
+  };
 
   useEffect(() => {
+    floatIncrease('aptos-tvl', tvl);
+    floatIncrease('aptos-users', users);
+    floatIncrease('aptos-total-staking', t_stakevalue);
+    floatIncrease('aptos-total-compound', t_earncompound);
+    floatIncrease('aptos-total-collect', t_earncollect);
+    floatIncrease('aptos-referral-earn', reffered_earn);
+
   }, []);
 
   const updateCalc = event => {
@@ -90,23 +125,35 @@ function WealthMountain() {
     }
   }
 
+  const stake = () => {
+    document.getElementsByClassName("earning-calculator")[0].scrollIntoView({
+      behavior: 'smooth'
+    });
+  }
+
+
   return (
     <div className='aptos'>
-      <img src='aptos-bg-1.png' className='aptos-bg-1' />
-      <img src='aptos-bg-2.png' className='aptos-bg-2' />
+      <img src='aptos-bg-1.png' alt="aptos" className='aptos-bg-1' disabled />
+      <img src='aptos-bg-2.png' alt="aptos" className='aptos-bg-2' />
       <div className='main-content header'>
         <Container>
           <Row>
             <Col>
-              <Link to="/solana">
-                <Button className="custom-button mt-6 aptos-switch" outline >Switch Network</Button>
-              </Link>
+              <Button className="aptos-custom-button mt-6 aptos-switch" outline onClick={() => setSelected(!selected)}><img src="aptos-icon.png" width="30" className='float-left' />{currentNetwork}{selected?<MdExpandLess size="1.7em" className="pr-2 float-right" />:<MdExpandMore size="1.7em" className="pr-2 float-right" />}</Button>
+              <div className='bg-white mt-8 py-1 aptos-select-pannel' style={{ display: selected ? 'block' : 'none' }}>
+                <Link to="/solana">
+                  <div className='w-full cursor-pointer' onClick={() => { setNetwork('Solana'); setSelected(!selected) }}><img src="solana-icon.png" width="27" className='float-left' />SOLANA</div>
+                </Link>
+                <hr />
+                <div className='w-full cursor-pointer' onClick={() => { setNetwork('Aptos'); setSelected(!selected) }}><img src="aptos-icon.png" width="27" className='float-left' />APTOS</div>
+              </div>
             </Col>
             <Col className="logo">
-              <img src='aptos-logo.png' width="250" />
+              <img src='aptos-logo.png' alt="aptos" width="264" />
             </Col>
             <Col>
-              <Button className="custom-button mt-6 aptos-connect" outline >Connect</Button>
+              <Button className="aptos-custom-button mt-6 aptos-connect" outline >Connect</Button>
             </Col>
           </Row>
         </Container>
@@ -118,26 +165,26 @@ function WealthMountain() {
             <CardDeck className='aptos-card'>
               <Card body className="text-center aptos-text">
                 <h5 className="calvino aptos-text">TVL</h5>
-                <h5 className="source font-weight-bold text-white">
-                  12
+                <h5 className="source font-weight-bold text-white" id="aptos-tvl">
+                  {0}
                 </h5>
               </Card>
               <Card body className="text-center aptos-text">
                 <h5 className="calvino aptos-text">Users</h5>
-                <h5 className="source font-weight-bold text-white">
-                  387
+                <h5 className="source font-weight-bold text-white" id="aptos-users">
+                  {0}
                 </h5>
               </Card>
               <Card body className="text-center aptos-text">
                 <h5 className="calvino aptos-text">Stake Fee</h5>
-                <h5 className="source font-weight-bold text-white">
-                  10%
+                <h5 className="source font-weight-bold text-white" id="aptos-stake-fee">
+                  {stake_fee + '%'}
                 </h5>
               </Card>
               <Card body className="text-center aptos-text">
                 <h5 className="calvino aptos-text">Collection Fee</h5>
-                <h5 className="source font-weight-bold text-white">
-                  10%
+                <h5 className="source font-weight-bold text-white" id="aptos-collect-fee">
+                  {collect_fee + '%'}
                 </h5>
               </Card>
             </CardDeck>
@@ -145,24 +192,24 @@ function WealthMountain() {
           <div>
             <CardDeck className="p-3 aptos-card">
               <Card body className="text-center aptos-text">
-                <h4 className="calvino aptos-text">Total Staked Value</h4>
-                <h1 className="source font-weight-bold text-white">$0.00</h1>
-                <Button outline className="custom-button mt-3 source">Start a stake to see your info</Button>
+                <h4 className="calvino aptos-text" >Total Staked Value</h4>
+                <h1 className="source font-weight-bold text-white" id="aptos-total-staking">{0}</h1>
+                <Button outline className="aptos-custom-button mt-3 source" onClick={stake}>Start a stake to see your info</Button>
               </Card>
               <Card body className="text-center aptos-text">
-                <h4 className="calvino aptos-text">Total Earnings</h4>
+                <h4 className="calvino aptos-text" >Total Earnings</h4>
                 <CardDeck className='aptos-card'>
                   <Card style={{ background: "transparent" }}>
-                    <h4 className="source font-weight-bold text-white">10</h4>
+                    <h4 className="source font-weight-bold text-white" id="aptos-total-compound">{0}</h4>
                   </Card>
                   <Card style={{ background: "transparent" }}>
-                    <h4 className="source font-weight-bold text-white">$0.000</h4>
+                    <h4 className="source font-weight-bold text-white" id="aptos-total-collect">{0}</h4>
                   </Card>
                 </CardDeck>
                 <Row>
                   <Col>
-                    <Button className="custom-button source mt-3" outline >compound</Button>
-                    <Button className="custom-button source mt-3" outline >collect</Button>
+                    <Button className="aptos-custom-button source mt-3" outline >compound</Button>
+                    <Button className="aptos-custom-button source mt-3" outline >collect</Button>
                   </Col>
                 </Row>
                 <small className="pt-2 source">Note: Collecting will reset all stakes to 3.5% daily. Compound will add to your stakes while doing the same.</small>
@@ -171,18 +218,18 @@ function WealthMountain() {
             <CardDeck className="pl-3 pr-3 pb-3 aptos-card">
               <Card body className="text-center aptos-text">
                 <h5 className="calvino aptos-text">Referrals Earned</h5>
-                <h4 className="source font-weight-bold text-white">$24</h4>
+                <h4 className="source font-weight-bold text-white" id="aptos-referral-earn">{0}</h4>
                 <Row>
                   <Col>
-                    <Button className="custom-button source mt-2" outline >STAKE</Button>
-                    <Button className="custom-button source mt-2" outline >COLLECT</Button>
+                    <Button className="aptos-custom-button source mt-2" outline >STAKE</Button>
+                    <Button className="aptos-custom-button source mt-2" outline >COLLECT</Button>
                   </Col>
                 </Row>
 
               </Card>
               <Card body className="text-center aptos-text">
                 <h5 className="calvino aptos-text">Referral Link</h5>
-                <h3 type="button" onClick={() => navigator.clipboard.writeText("https://busd.wcminer.com?ref=" + userWalletAddress)} className="referralButton source font-weight-bold"><FaCopy size="1.6em" className="pr-3" />COPY LINK</h3>
+                <h3 type="button" className="referralButton source font-weight-bold"><FaCopy size="1.6em" className="pr-3" />COPY LINK</h3>
                 <small className="source aptos-text">Earn 10% when someone uses your referral link.</small>
               </Card>
             </CardDeck>
@@ -221,7 +268,7 @@ function WealthMountain() {
       <div>
         <Container className="pt-3">
           <Card body>
-            <h2 className="calvino text-center aptos-text">Earnings Calculator</h2>
+            <h2 className="calvino text-center aptos-text earning-calculator">Earnings Calculator</h2>
             <CardDeck className='aptos-card'>
               <Card body className="text-center">
                 <h3 className="calvino font-weight-bold aptos-text">Staking</h3>
@@ -277,7 +324,7 @@ function WealthMountain() {
         </Container>
       </div>
       <div className='enter-stake main-content'>
-        {/* <img src='sub-img-bottom.png' style={{position:'absolute', width:'100%', bottom:'0px'}}/> */}
+        {/* <img src='sub-img-bottom. alt="aptos"png' style={{position:'absolute', width:'100%', bottom:'0px'}}/> */}
         <Container className="pt-3">
           <CardDeck className="p-3 aptos-card">
             <Card body className="text-center aptos-text">
@@ -292,13 +339,13 @@ function WealthMountain() {
                       placeholder="Minimum 50 BUSD"
                     ></Input>
                   </InputGroup>
-                  <Button className="custom-button mt-4 source font-weight-bold">APPROVE</Button>
-                  <Button className="custom-button mt-4 source font-weight-bold">STAKE</Button>
+                  <Button className="aptos-custom-button mt-4 source font-weight-bold">APPROVE</Button>
+                  <Button className="aptos-custom-button mt-4 source font-weight-bold">STAKE</Button>
                 </FormGroup>
               </Form>
               <small className="source aptos-text">Note: Stakes are not locked. You can unstake at any time.</small><br />
-              <small className="source aptos-text text-left"><FaWallet size="1.7em" className="pr-2" />Your wallet: <span className="text-white font-weight-bold">{userStablecoinBalance.toFixed(2)} BUSD</span></small>
-              <small className="source aptos-text text-left"><FaUserShield size="1.7em" className="pr-2" />Approved amount: <span className="text-white font-weight-bold">{stablecoinAllowanceAmount.toFixed(2)} BUSD</span></small>
+              <small className="source aptos-text text-left"><FaWallet size="1.7em" className="pr-2" />Your wallet: <span className="text-white font-weight-bold">0.00 BUSD</span></small>
+              <small className="source aptos-text text-left"><FaUserShield size="1.7em" className="pr-2" />Approved amount: <span className="text-white font-weight-bold">0.00 BUSD</span></small>
               <a className="source text-left text-underline aptos-text" href="https://pancakeswap.finance/swap" target="_blank" rel="noreferrer"><small className="source aptos-text text-left"><FaSearchDollar size="1.7em" className="pr-2" />Swap your tokens for BUSD here. </small></a>
             </Card>
             <Card body className="source text-center">
@@ -357,7 +404,7 @@ function WealthMountain() {
 
                     <small className="source">Disclaimer: Dividend payouts are fixed and the TVL fluctuations do not effect the daily yield like in traditional miners.</small>
                   </Card>
-                  <Card className="p-3">
+                  <Card className="p-3 h-full pb-6">
                     <h3 className='aptos-text'>Unstake Fees</h3>
                     <table className="source" border="2" style={{ width: '100%' }}>
                       <tbody>
@@ -412,8 +459,8 @@ function WealthMountain() {
           </div>
           <p className="aptos-custom-footer-desc">COPYRIGHT © 2022 SOLSEARCHER.FINANCE ALL RIGHTS RESERVED</p>
         </Container>
-        <img src='aptos-bg-3.png' className='aptos-bg-3' />
-        <img src='aptos-bg-4.png' className='aptos-bg-4' />
+        <img src='aptos-bg-3.png' alt="aptos" className='aptos-bg-3' />
+        <img src='aptos-bg-4.png' alt="aptos" className='aptos-bg-4' />
       </div>
     </div>
   )

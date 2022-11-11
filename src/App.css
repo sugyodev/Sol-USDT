@@ -88,6 +88,7 @@ hr.rounded {
 }
 
 .referralButton {
+  z-index: 2;
   color: white;
 }
 
@@ -22816,6 +22817,10 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   bottom: 120%;
 }
 
+.cursor-pointer{
+  cursor: pointer;
+}
+
 .noUi-vertical .noUi-tooltip {
   -webkit-transform: translate(0, -50%);
   transform: translate(0, -50%);
@@ -23060,7 +23065,13 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   min-height: 6rem;
   background-color: rgba(255, 0, 0, 0.1);
 }
+.w-full{
+  width: 100%;
+}
 
+.h-full{
+  height: 100%;
+}
 .ct-example-row-flex-cols .row {
   min-height: 10rem;
   background-color: rgba(255, 0, 0, 0.1);

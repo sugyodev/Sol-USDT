@@ -41,6 +41,38 @@
   font-size: 20px;
 }
 
+.sol-select-pannel {
+  background-color: white ;
+  border: solid 1px rgba(95, 95, 95, 0.75);
+  width: 250px;
+  border-radius: 18px;
+}
+
+.sol-select-pannel div{
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  text-align: center;
+  color: #9945FF;
+  font-weight: 700;
+  font-size: 21px;
+  border-radius: 16px;
+}
+.sol-select-pannel:hover{
+  box-shadow:
+  0 0 10px #fff,
+  0 0 15px #9945FF,
+  0 0 25px #9945FF;
+}
+.sol-select-pannel hr {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.sol-select-pannel div:hover{
+  background-color: #9945FF;
+  color: white;
+}
+
 .sol-top-img {
   right: 30%;
   width: 300px;
@@ -73,6 +105,9 @@
     width: 100%;
   }
   .sol-connect{
+    width: 100%;
+  }
+  .sol-select-pannel{
     width: 100%;
   }
 }

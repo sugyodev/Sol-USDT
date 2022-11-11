@@ -6,7 +6,7 @@
   color: #12BED1;
 }
 
-.custom-button {
+.aptos-custom-button {
   background: linear-gradient(89.72deg, #1263D1 -14.51%, #18DBEB 40.59%, #1263D1 108.24%);
   color: black;
   mix-blend-mode: normal;
@@ -14,6 +14,7 @@
   border-radius: 20px;
   border: none;
   font-weight: 'bold';
+  min-width: 134px;
   font-family: 'Roboto';
 }
 
@@ -30,7 +31,10 @@
   font-weight: 700;
   font-size: 20px;
 }
-
+.aptos-switch ::after{
+  content: '▾';
+  float: right;
+}
 .aptos-connect {
   background: radial-gradient(100% 2025% at 0% 65.38%, #00C9FF 0%, #1262D0 100%);
   width: 250px;
@@ -40,8 +44,41 @@
   font-size: 20px;
 }
 
-@media only screen and (max-width: 973px) and (min-width: 200px){
-  .aptos-switch{
+.aptos-select-pannel {
+  background-color: white;
+  width: 250px;
+  border-radius: 18px;
+}
+
+.aptos-select-pannel div{
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  text-align: center;
+  color: #1262D0;
+  font-weight: 700;
+  font-size: 21px;
+  border-radius: 16px;
+}
+.aptos-select-pannel:hover{
+  box-shadow:
+  0 0 10px #fff,
+  0 0 15px #1262D0,
+  0 0 25px #1262D0;
+}
+.aptos-select-pannel hr {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.aptos-select-pannel div:hover{
+  color: white;
+  background-color: #1262D0;
+}
+@media only screen and (max-width: 973px) and (min-width: 200px) {
+  .aptos-switch {
+    width: 100%;
+  }
+  .aptos-select-pannel{
     width: 100%;
   }
   .aptos-connect{
@@ -49,8 +86,8 @@
   }
 }
 
-@media only screen and (max-width: 767.5px) and (min-width: 200px){
-  .aptos-connect{
+@media only screen and (max-width: 767.5px) and (min-width: 200px) {
+  .aptos-connect {
     margin-top: 20px !important;
   }
 }
@@ -95,7 +132,7 @@
     0 0 31px #12BED1;
 }
 
-.aptos-custom-footer-desc{
+.aptos-custom-footer-desc {
   margin-top: 20px;
   color: white;
   text-align: center;
@@ -129,27 +166,44 @@
   color: #00C9FF;
 }
 
-.aptos-bg-1{
+.aptos-bg-1 {
   position: absolute;
   width: 100%;
 }
 
-.aptos-bg-2{
+.aptos-bg-2 {
   position: absolute;
   left: 0;
   top: 700px;
   width: 40%;
 }
 
-.aptos-bg-3{
+.aptos-bg-3 {
   bottom: 0;
   position: absolute;
   width: 100%;
 }
 
-.aptos-bg-4{
+.aptos-bg-4 {
   bottom: 0;
   right: 0;
   position: absolute;
   width: 50%;
+}
+
+.custom-select-mui .MuiNativeSelect-select {
+  padding-left: 20px !important;
+  font-weight: 700;
+  font-size: 20px;
+  color: white;
+  text-align: center;
+  padding: 10px 20px;
+}
+
+.custom-select-mui .MuiSvgIcon-fontSizeMedium {
+  display: none;
+}
+
+.css-1ptx2yq-MuiInputBase-root-MuiInput-root:after {
+  display: none;
 }
